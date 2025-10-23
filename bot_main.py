@@ -15,6 +15,13 @@ import utils.secret_constants as sConsts
 
 prefix: str = "!"
 
+class Team:
+    def __init__(self, position = 0, name = "", points = 0 , logo = ""):
+        self.position = position
+        self.name = name
+        self.points = points
+        self.logo = logo
+
 class Bot(commands.Bot):
     uptime: datetime = datetime.now(timezone.utc)
 

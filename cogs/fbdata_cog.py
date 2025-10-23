@@ -26,16 +26,16 @@ class FBDataCog(commands.Cog):
     )
 
     #Search and print a league table
-    @fbdata.command(name="standings", description="Print a league table.", )
-    async def Standings(self, interaction, league: str):
+    @fbdata.command(name="standings", description="Print the Premier League table.", )
+    async def Standings(self, interaction):
         embed = dc.Embed(
             color=dc.Color.from_str(consts.PREM_COLOUR), 
-            title=f"{league} Table:"
+            title=f"Premier League Table:"
             )
         embed.timestamp = dc.utils.utcnow()
 
         #Generate the required URL payload and get the request
-        url = urlBase + "competitions/" + dicts.updatedLeagues[league] + "/standings" 
+        url = urlBase + "competitions/PL/standings" 
         r = requests.get(url, headers=headers)
         digest = r.json()
 
@@ -45,18 +45,3 @@ class FBDataCog(commands.Cog):
             image.save(image_binary, 'PNG')
             image_binary.seek(0)
             await interaction.response.send_message(file=dc.File(fp=image_binary, filename='image.png'))
-
-        
-
-    #Make the user's selection for league choice autocomplete
-    @Standings.autocomplete("league")
-    async def LeagueAutocomplete(self, interaction: dc.Interaction, current: str,):
-        leagues = list(dicts.updatedLeagues.keys())
-        return [
-        app_commands.Choice(name=league, value=league)
-        for league in leagues if current.lower() in league.lower()
-        ]
-    
-### --------------------- ###
-
-#League Table Image Generation

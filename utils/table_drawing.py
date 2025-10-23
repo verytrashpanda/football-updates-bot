@@ -15,8 +15,6 @@ def ShowTable(digest) -> Image:
     #List of Team classes
     cellList = []
 
-
-
     #Creating however many amount of Teams we need and adding them to cellList
     for club in digest["standings"][0]["table"]:
         newClub = Team()
