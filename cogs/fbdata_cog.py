@@ -41,7 +41,6 @@ class FBDataCog(commands.Cog):
         digest = r.json()
 
         image = drawing.ShowTable(digest)
-        image.show()
 
         with BytesIO() as image_binary:
             image.save(image_binary, "PNG")
