@@ -1,6 +1,6 @@
 from PIL import Image, ImageDraw, ImageFont, ImageText, ImageFilter
 import requests
-import bot_constants as consts 
+import utils.bot_constants as consts 
 from io import BytesIO
 import os
 
