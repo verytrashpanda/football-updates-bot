@@ -1,6 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont, ImageText, ImageFilter
 import requests
 import utils.bot_constants as consts 
+import utils.dicts as dicts
 from io import BytesIO
 import os
 
@@ -20,7 +21,7 @@ def ShowTable(digest) -> Image:
         newClub = Team()
 
         newClub.position = club["position"]
-        newClub.name = club["team"]["shortName"]
+        newClub.name = dicts.properShortNames[club["team"]["id"]]
         newClub.points = club["points"]
         newClub.logo = club["team"]["crest"]
 
@@ -88,6 +89,5 @@ def ShowTable(digest) -> Image:
         
         #Draw the cell line
         draw.line(([0, yPos], [tableWidth, yPos]), width=1, fill="white")
-
-    #Showing the image to me as a test
-    tableImage.show()        
+    
+    return tableImage

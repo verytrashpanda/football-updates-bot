@@ -12,27 +12,27 @@ updatedLeagues = {
     "Serie A (BR)" : "BSA"
 }
 
-#Dict about clubs, football-data.org ID is their key and the value is a list of information about them. The IDs should never change as they're set by the API.
-#I don't like to use the football-data.org short names for example due to error ("Nottingham" instead of "Forest").
-clubInfo = {
-    57 : "Arsenal FC",
-    64 : "Liverpool FC",
-    73 : "Tottenham Hotspur FC",
-    1044 : "AFC Bournemouth",
-    65 : "Manchester City FC",
-    354 : "Crystal Palace FC",
-    61 : "Chelsea FC",
-    62 : "Everton FC",
-    71 : "Sunderland AFC",
-    66 : "Manchester United FC",
-    67 : "Newcastle United FC",
-    397 : "Brighton & Hove Albion FC",
-    58 : "Aston Villa FC",
-    63 : "Fulham FC",
-    341 : "Leeds United FC",
-    402 : "Brentford FC",
-    351 : "Nottingham Forest FC",
-    328 : "Burnley FC",
-    563 : "West Ham United FC",
-    76 : "Wolverhampton Wanderers FC"
+#Dict to include a club's preferred shortName by its ID.
+#I don't like to use the football-data.org short names due to error ("Nottingham" instead of "Forest" etc).
+properShortNames= {
+    57 : "Arsenal",
+    64 : "Liverpool",
+    73 : "Tottenham Hotspur",
+    1044 : "Bournemouth",
+    65 : "Manchester City",
+    354 : "Crystal Palace",
+    61 : "Chelsea",
+    62 : "Everton",
+    71 : "Sunderland",
+    66 : "Manchester United",
+    67 : "Newcastle",
+    397 : "Brighton",
+    58 : "Aston Villa",
+    63 : "Fulham",
+    341 : "Leeds United",
+    402 : "Brentford",
+    351 : "Nottingham Forest",
+    328 : "Burnley",
+    563 : "West Ham",
+    76 : "Wolves"
 }

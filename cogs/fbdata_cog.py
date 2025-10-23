@@ -7,8 +7,9 @@ import random
 import utils.bot_constants as consts
 import utils.dicts as dicts
 import utils.table_drawing as drawing
-import io
+from io import BytesIO
 import utils.secret_constants as sConsts
+from PIL import Image, ImageDraw, ImageFont, ImageText, ImageFilter
 
 urlBase = "https://api.football-data.org/v4/" #Base url to make API requests from
 headers = { 'X-Auth-Token': sConsts.API_KEY } #Header with our API token
@@ -40,8 +41,10 @@ class FBDataCog(commands.Cog):
         digest = r.json()
 
         image = drawing.ShowTable(digest)
-        
-        with io.BytesIO() as image_binary:
-            image.save(image_binary, 'PNG')
+        image.show()
+
+        with BytesIO() as image_binary:
+            image.save(image_binary, "PNG")
             image_binary.seek(0)
             await interaction.response.send_message(file=dc.File(fp=image_binary, filename='image.png'))
+        
