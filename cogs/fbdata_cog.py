@@ -54,3 +54,20 @@ class FBDataCog(commands.Cog):
             image.save(image_binary, "PNG")
             image_binary.seek(0)
             await int_msg.edit(attachments=[dc.File(fp=image_binary, filename='image.png')])
+
+    #Show the user available leagues
+    @fbdata.command(name="available_leagues", description="Get a list of available leagues.")
+    async def PrintAvailableLeagues(self, interaction) -> None:
+        print(f"Performing PrintAvailableLeagues request for {interaction.user}.")
+        cb = await interaction.response.defer(ephemeral=True, thinking=True) #Send thinking response
+        int_msg = cb.resource
+
+        responseContent = "The following leagues (and associated codes) are available:\n"
+        for name, code in dicts.updatedLeagues.items():
+            responseContent += f"* {name} ({code})\n"
+        
+        embed = dc.Embed(colour=dc.Colour.from_str(consts.PREM_COLOUR))
+        embed.add_field(name="Available Leagues", value=responseContent)
+
+        await int_msg.edit(embed=embed)
+
