@@ -12,7 +12,7 @@ class Team:
         self.points = points
         self.logo = logo
 
-def ShowTable(digest) -> Image:
+async def ShowTable(digest) -> Image:
     #List of Team classes
     cellList = []
 
@@ -21,7 +21,12 @@ def ShowTable(digest) -> Image:
         newClub = Team()
 
         newClub.position = club["position"]
-        newClub.name = dicts.properShortNames[club["team"]["id"]]
+
+        try: #Essentially just trying to replace our shortname with one from our new names dict - if I've not provided a "proper" name then just use the API's
+            newClub.name = dicts.properShortNames[club["team"]["id"]]
+        except:
+            newClub.name = club["team"]["shortName"]
+        
         newClub.points = club["points"]
         newClub.logo = club["team"]["crest"]
 
@@ -30,8 +35,6 @@ def ShowTable(digest) -> Image:
     cellHeight = 40
     halfCellHeight = round(cellHeight / 2)
     tableHeight = (len(cellList) + 1) * cellHeight
-
-
 
     #Defining our font
     mainFont = ImageFont.truetype("OCRAEXT.TTF", cellHeight / 2)

@@ -4,6 +4,7 @@ from discord import app_commands
 import requests
 import datetime
 import random
+import json
 import utils.bot_constants as consts
 import utils.dicts as dicts
 import utils.table_drawing as drawing
@@ -28,22 +29,27 @@ class FBDataCog(commands.Cog):
 
     #Search and print a league table
     @fbdata.command(name="standings", description="Print the Premier League table.", )
-    async def Standings(self, interaction):
-        embed = dc.Embed(
-            color=dc.Color.from_str(consts.PREM_COLOUR), 
-            title=f"Premier League Table:"
-            )
-        embed.timestamp = dc.utils.utcnow()
+    async def Standings(self, interaction, league_code: str) -> None:
+        print(f"Performing standings request for {interaction.user}.")
+        cb = await interaction.response.defer(ephemeral=False, thinking=True)
+        int_msg = cb.resource
+        
+        #Check if the entered code is actually one we can use?
+        if (league_code not in dicts.updatedLeagues.values()):
+            await int_msg.edit(content=f"No league `{league_code}` found. Please enter an accepted league code.")
+            print("Incorrect league code entered, exiting command.\n")
+            return None
 
         #Generate the required URL payload and get the request
-        url = urlBase + "competitions/PL/standings" 
+        url = urlBase + f"competitions/{league_code}/standings" 
         r = requests.get(url, headers=headers)
         digest = r.json()
 
-        image = drawing.ShowTable(digest)
+        json.dumps(digest, indent=4)
+
+        image = await drawing.ShowTable(digest)
 
         with BytesIO() as image_binary:
             image.save(image_binary, "PNG")
             image_binary.seek(0)
-            await interaction.response.send_message(file=dc.File(fp=image_binary, filename='image.png'))
-        
+            await int_msg.edit(attachments=[dc.File(fp=image_binary, filename='image.png')])

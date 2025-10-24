@@ -45,9 +45,6 @@ async def sync(ctx):
     print(f"{ctx.author} synchronising commands for guild id {ctx.guild.id}.")
     bot.tree.copy_global_to(guild=ctx.guild)
     cmd_list = await bot.tree.sync(guild=ctx.guild)
-    print(f'{len(cmd_list)} commands were synchronized to guild {ctx.guild.id}.')
-
-
-
+    print(f'{len(cmd_list)} commands were synchronized to guild {ctx.guild.id}.\n')
 
 bot.run(sConsts.BOT_KEY)
