@@ -12,8 +12,8 @@ from io import BytesIO
 import utils.secret_constants as sConsts
 from PIL import Image, ImageDraw, ImageFont, ImageText, ImageFilter
 
-urlBase = "https://api.football-data.org/v4/" #Base url to make API requests from
-headers = { 'X-Auth-Token': sConsts.API_KEY } #Header with our API token
+urlBase = consts.URL_BASE #Base url to make API requests from
+headers = sConsts.HEADERS #Header with our API token
 
 #This cog will deal with all commands that pull from the football-data.org API for stats and updates.
 class FBDataCog(commands.Cog):
@@ -31,14 +31,16 @@ class FBDataCog(commands.Cog):
     @fbdata.command(name="standings", description="Print the Premier League table.", )
     async def Standings(self, interaction, league_code: str) -> None:
         print(f"Performing standings request for {interaction.user}.")
-        cb = await interaction.response.defer(ephemeral=False, thinking=True)
+        cb = await interaction.response.defer(ephemeral=False, thinking=True) #Send thinking response
         int_msg = cb.resource
         
-        #Check if the entered code is actually one we can use?
+        #Check if the entered code is actually one we can use
         if (league_code not in dicts.updatedLeagues.values()):
             await int_msg.edit(content=f"No league `{league_code}` found. Please enter an accepted league code.")
             print("Incorrect league code entered, exiting command.\n")
             return None
+
+
 
         #Generate the required URL payload and get the request
         url = urlBase + f"competitions/{league_code}/standings" 
