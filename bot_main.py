@@ -42,7 +42,7 @@ async def on_ready():
 #Syncing command to get slash commands to appear in the command list
 @bot.command(name="sync")
 async def sync(ctx):
-    print(f"{ctx.author} synchronising commands for guild id {ctx.guild.id}.")
+    print(f"{ctx.author} synchronising commands for guild id {ctx.guild.id}.\n")
     bot.tree.copy_global_to(guild=ctx.guild)
     cmd_list = await bot.tree.sync(guild=ctx.guild)
     print(f'{len(cmd_list)} commands were synchronized to guild {ctx.guild.id}.\n')
