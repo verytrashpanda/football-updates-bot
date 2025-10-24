@@ -1,8 +1,6 @@
 import requests
 import utils.bot_constants as consts
 import utils.secret_constants as sConsts
-import json
-
 
 #We want to use our user-added API key and see what leagues they have access to, which we can do by just pulling "competitions". Will sync if you have more access.
 url = consts.URL_BASE + f"competitions" 
@@ -12,8 +10,6 @@ digest = r.json()
 #Then we want to map their standard names to their codes, which we use in urls.
 updatedLeagues: dict = {}
 for comp in digest["competitions"]:
-    print(f"Competition: {comp["name"]}. id: {comp["id"]}. Code: {comp["code"]}. Type: {comp["type"]}")
-
     updatedLeagues[comp["name"]] = comp["code"]
 #Now we have a dict of the leagues the bot have access to and their associated codes.
 
