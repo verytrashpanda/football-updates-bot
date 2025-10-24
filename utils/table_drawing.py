@@ -34,8 +34,8 @@ async def GetTableImage(digest) -> Image:
 
     #Defining our font
     fontPath = os.path.join(os.path.dirname(__file__), "fonts/OCRAEXT.TTF")
-    mainFont = ImageFont.truetype("OCRAEXT.TTF", cellHeight / 2)
-    headerFont = ImageFont.truetype("OCRAEXT.TTF", cellHeight / 2)
+    mainFont = ImageFont.truetype(fontPath, cellHeight / 2)
+    headerFont = ImageFont.truetype(fontPath, cellHeight / 2)
 
     #Defining our header
     header = ["Pos", "Team", "", "Pts."]
