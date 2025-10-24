@@ -36,8 +36,8 @@ bot = Bot(intents=intents)
 async def on_ready():
     await bot.add_cog(SillyCog(bot))
     await bot.add_cog(FBDataCog(bot))
-    await bot.add_cog(UpdatesCog(bot))
-    print(f'We have logged in as {bot.user}.')
+    #await bot.add_cog(UpdatesCog(bot))
+    print(f'We have logged in as {bot.user}.\n')
 
 #Syncing command to get slash commands to appear in the command list
 @bot.command(name="sync")

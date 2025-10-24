@@ -40,7 +40,7 @@ properNames= {
     76 : "Wolves"
 }
 
-#Essentially just trying to replace our shortname with one from our properNames dict - if I've not provided a "proper" name then just use the API provided one.
+#Essentially just trying to replace a shortName my properNames alias - if I've not provided a "proper" name then just use the API provided one.
 #Overwrought with two inputs but needs to be done this way to keep API requests low.
 def GetProperName(id: int, shortName: str) -> str:
     if (id in properNames):

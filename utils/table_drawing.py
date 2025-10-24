@@ -42,7 +42,7 @@ async def GetTableImage(digest) -> Image:
     tableWidth = sum(headerDimensions) #The length of all our header components, obviously
 
     tableImage = Image.new(mode="RGB", size=(tableWidth,tableHeight), color="#1a1a1a")
-    print(f"Creating an image of width {tableWidth} and height {tableHeight}.")
+    print(f"Creating a league table image with {len(cellList)} rows ({tableWidth}x{tableHeight}).")
     draw = ImageDraw.Draw(tableImage)
 
     xPos = 0
