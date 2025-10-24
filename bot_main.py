@@ -47,4 +47,9 @@ async def sync(ctx):
     cmd_list = await bot.tree.sync(guild=ctx.guild)
     print(f'{len(cmd_list)} commands were synchronized to guild {ctx.guild.id}.\n')
 
+@bot.tree.command(name="ping")
+async def ping(interaction):
+    await interaction.response.send_message("Fuck off cunt")
+    print(f"Pinged by {interaction.user}.\n")
+
 bot.run(sConsts.BOT_KEY)
