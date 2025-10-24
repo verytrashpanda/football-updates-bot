@@ -1,16 +1,24 @@
-#Dict of the leagues I have access to and their associated codes
-updatedLeagues = {
-    "Premier League" : "PL",
-    "Champions League" : "CL",
-    "Primeira Liga" : "PPL",
-    "Eredivisie" : "DED",
-    "Bundesliga" : "BL1",
-    "Ligue 1" : "FL1",
-    "Serie A (IT)" : "SA",
-    "La Liga" : "PD",
-    "Championship" : "ELC",
-    "Serie A (BR)" : "BSA"
-}
+import requests
+import bot_constants as consts
+import secret_constants as sConsts
+import json
+
+
+#We want to use our user-added API key and see what leagues they have access to, which we can do by pulling "competitions".
+url = consts.URL_BASE + f"competitions" 
+r = requests.get(url, headers=sConsts.HEADERS)
+digest = r.json()
+
+#Then we want to map their standard names to their codes, which we use in urls.
+updatedLeagues = {}
+for comp in digest["competitions"]:
+    print(f"Competition: {comp["name"]}. id: {comp["id"]}. Code: {comp["code"]}. Type: {comp["type"]}")
+
+    updatedLeagues[comp["name"]] = comp["code"]
+#Now we have a dict of the leagues the bot have access to and their associated codes.
+
+
+
 
 #Dict to include a club's preferred shortName by its ID.
 #I don't like to use the football-data.org short names due to error ("Nottingham" instead of "Forest" etc).
