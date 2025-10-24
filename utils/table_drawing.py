@@ -33,7 +33,7 @@ async def GetTableImage(digest) -> Image:
     tableHeight = (len(cellList) + 1) * cellHeight
 
     #Defining our font
-    fontPath = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fonts/OCRAEXT.TTF")
+    fontPath = os.path.join(consts.PROJECT_ROOT, "fonts/OCRAEXT.TTF")
     mainFont = ImageFont.truetype(fontPath, cellHeight / 2)
     headerFont = ImageFont.truetype(fontPath, cellHeight / 2)
 
