@@ -35,6 +35,8 @@ class FBDataCog(commands.Cog):
         print(f"Performing Standings() request for {interaction.user}.")
         cb = await interaction.response.defer(ephemeral=False, thinking=True) #Send thinking response
         int_msg = cb.resource
+
+        league_code = league_code.upper() #codes are all uppercase
         
         #Check if the entered code is actually one we can use
         if (league_code not in dicts.updatedLeagues.values()):
