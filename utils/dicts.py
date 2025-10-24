@@ -4,7 +4,7 @@ import utils.secret_constants as sConsts
 import json
 
 
-#We want to use our user-added API key and see what leagues they have access to, which we can do by pulling "competitions".
+#We want to use our user-added API key and see what leagues they have access to, which we can do by just pulling "competitions". Will sync if you have more access.
 url = consts.URL_BASE + f"competitions" 
 r = requests.get(url, headers=sConsts.HEADERS)
 digest = r.json()
@@ -18,7 +18,7 @@ for comp in digest["competitions"]:
 #Now we have a dict of the leagues the bot have access to and their associated codes.
 
 
-#dict of preferred (aka correct) shortNames
+#dict of preferred (aka correct) aliases for clubs
 #I don't like to use the football-data.org shortNames due to error ("Nottingham" instead of "Forest" etc).
 #Yes, this is over-engineering and completely overcomplicating things, but I am so anal about the correct names being used for things in football. 
 properNames= {
