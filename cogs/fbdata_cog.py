@@ -27,6 +27,8 @@ class FBDataCog(commands.Cog):
         description="Football data functionality."
     )
 
+
+
     #Search and print a league table
     @fbdata.command(name="standings", description="Print the Premier League table.", )
     async def Standings(self, interaction, league_code: str) -> None:
@@ -37,20 +39,17 @@ class FBDataCog(commands.Cog):
         #Check if the entered code is actually one we can use
         if (league_code not in dicts.updatedLeagues.values()):
             await int_msg.edit(content=f"No league `{league_code}` found. Please enter an accepted league code.")
-            print("Incorrect league code entered, exiting command.\n")
+            print("Unknown/unusable league code entered, exiting command.\n")
             return None
-
-
 
         #Generate the required URL payload and get the request
         url = urlBase + f"competitions/{league_code}/standings" 
         r = requests.get(url, headers=headers)
         digest = r.json()
 
-        json.dumps(digest, indent=4)
+        image = await drawing.GetTableImage(digest) #Get table image
 
-        image = await drawing.ShowTable(digest)
-
+        #Add it as our embed to our message
         with BytesIO() as image_binary:
             image.save(image_binary, "PNG")
             image_binary.seek(0)

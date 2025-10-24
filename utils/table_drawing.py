@@ -12,23 +12,19 @@ class Team:
         self.points = points
         self.logo = logo
 
-async def ShowTable(digest) -> Image:
+#Takes a standings digest, spits out a league table image.
+async def GetTableImage(digest) -> Image:
     #List of Team classes
     cellList = []
 
-    #Creating however many amount of Teams we need and adding them to cellList
+    #Creating however many Teams we need and adding them to cellList
     for club in digest["standings"][0]["table"]:
         newClub = Team()
 
         newClub.position = club["position"]
-
-        try: #Essentially just trying to replace our shortname with one from our new names dict - if I've not provided a "proper" name then just use the API's
-            newClub.name = dicts.properShortNames[club["team"]["id"]]
-        except:
-            newClub.name = club["team"]["shortName"]
-        
+        newClub.name = dicts.GetProperName(club["team"]["id"], club["team"]["shortName"])
         newClub.points = club["points"]
-        newClub.logo = club["team"]["crest"]
+        newClub.logoLink = club["team"]["crest"]
 
         cellList.append(newClub)
 
@@ -65,15 +61,13 @@ async def ShowTable(digest) -> Image:
         xPos = 0 #reset to the left of the image each time
         yPos += cellHeight #move down a cell
 
-        
-
         #Place the position in the image
         draw.text([xPos + halfCellHeight, yPos+halfCellHeight], str(cell.position),font=mainFont, anchor="mm")
         xPos += headerDimensions[0]
 
         #Place the logo in the image
         logoOffset = 10
-        logoResponse = requests.get(cell.logo)
+        logoResponse = requests.get(cell.logoLink)
         logo = Image.open(BytesIO(logoResponse.content)).convert("RGBA")
 
         thumbnailDimension = cellHeight - logoOffset
