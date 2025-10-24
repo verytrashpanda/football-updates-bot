@@ -1,6 +1,6 @@
 import requests
-import bot_constants as consts
-import secret_constants as sConsts
+import utils.bot_constants as consts
+import utils.secret_constants as sConsts
 import json
 
 
@@ -10,7 +10,7 @@ r = requests.get(url, headers=sConsts.HEADERS)
 digest = r.json()
 
 #Then we want to map their standard names to their codes, which we use in urls.
-updatedLeagues = {}
+updatedLeagues: dict = {}
 for comp in digest["competitions"]:
     print(f"Competition: {comp["name"]}. id: {comp["id"]}. Code: {comp["code"]}. Type: {comp["type"]}")
 
@@ -18,10 +18,9 @@ for comp in digest["competitions"]:
 #Now we have a dict of the leagues the bot have access to and their associated codes.
 
 
-
-
-#Dict to include a club's preferred shortName by its ID.
-#I don't like to use the football-data.org short names due to error ("Nottingham" instead of "Forest" etc).
+#dict of preferred (aka correct) shortNames
+#I don't like to use the football-data.org shortNames due to error ("Nottingham" instead of "Forest" etc).
+#Yes, this is over-engineering and completely overcomplicating things, but I am so anal about the correct names being used for things in football. 
 properShortNames= {
     57 : "Arsenal",
     64 : "Liverpool",
