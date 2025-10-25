@@ -62,6 +62,4 @@ async def ping(interaction):
     await interaction.response.send_message("Fuck off cunt")
     print(f"Pinged by {interaction.user}.\n")
 
-
-
 bot.run(sConsts.BOT_KEY)

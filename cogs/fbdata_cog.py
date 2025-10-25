@@ -11,6 +11,7 @@ import utils.table_drawing as drawing
 from io import BytesIO
 import utils.secret_constants as sConsts
 from PIL import Image, ImageDraw, ImageFont, ImageText, ImageFilter
+from utils.autocompletes import LeagueNameAutocomplete
 
 urlBase = consts.URL_BASE #Base url to make API requests from
 headers = sConsts.HEADERS #Header with our API token
@@ -26,14 +27,6 @@ class FBDataCog(commands.Cog):
         name="fbdata",
         description="Football data functionality."
     )
-
-    #Autocomplete function for league names
-    async def LeagueNameAutocomplete(self, interaction: dc.Interaction, current: str) -> list[app_commands.Choice["str"]]:
-        names = list(dicts.updatedLeagues.keys())
-        return [
-        app_commands.Choice(name=name, value=name)
-        for name in names if current.lower() in name.lower()
-    ]
 
     #Search and print a league table
     @fbdata.command(name="standings", description="Print a league table.")
