@@ -18,13 +18,13 @@ async def GetTableImage(digest) -> Image:
     cellList = []
 
     #Creating however many Teams we need and adding them to cellList
-    for club in digest["standings"][0]["table"]:
+    for club in digest["response"][0]["league"]["standings"][0]: #yes, this is genuinely the fucking path in the API for some reason, christ
         newClub = Team()
 
-        newClub.position = club["position"]
-        newClub.name = dicts.GetProperName(club["team"]["id"], club["team"]["shortName"])
+        newClub.position = club["rank"]
+        newClub.name = club["team"]["name"]
         newClub.points = club["points"]
-        newClub.logoLink = club["team"]["crest"]
+        newClub.logoLink = club["team"]["logo"]
 
         cellList.append(newClub)
 

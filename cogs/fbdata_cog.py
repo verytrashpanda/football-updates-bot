@@ -23,28 +23,40 @@ class FBDataCog(commands.Cog):
         
 
     fbdata = app_commands.Group(
-        name="data",
+        name="fbdata",
         description="Football data functionality."
     )
 
+    #Autocomplete function for league names
+    async def LeagueNameAutocomplete(self, interaction: dc.Interaction, current: str) -> list[app_commands.Choice["str"]]:
+        names = list(dicts.updatedLeagues.keys())
+        return [
+        app_commands.Choice(name=name, value=name)
+        for name in names if current.lower() in name.lower()
+    ]
+
     #Search and print a league table
-    @fbdata.command(name="standings", description="Print a league table.", )
-    async def Standings(self, interaction, league_code: str) -> None:
+    @fbdata.command(name="standings", description="Print a league table.")
+    @app_commands.autocomplete(league_name=LeagueNameAutocomplete)
+    async def Standings(self, interaction, league_name: str) -> None:
         print(f"Performing Standings() request for {interaction.user}.")
         cb = await interaction.response.defer(ephemeral=False, thinking=True) #Send thinking response
         int_msg = cb.resource
 
-        league_code = league_code.upper() #codes are all uppercase
-        
-        #Check if the entered code is actually one we can use
-        if (league_code not in dicts.updatedLeagues.values()):
-            await int_msg.edit(content=f"No league `{league_code}` found. Use /fbdata available_leagues to see league codes.")
-            print(f"Unknown/unusable league code {league_code} entered, exiting command.\n")
+        #Check if the entered name is actually one we can use
+        if (league_name not in dicts.updatedLeagues.keys()):
+            await int_msg.edit(content=f"No league `{league_name}` found. Use /data available_leagues to see league codes.")
+            print(f"Unknown/unusable league code {league_name} entered, exiting command.\n")
             return None
 
         #Generate the required URL payload and get the request
-        url = urlBase + f"competitions/{league_code}/standings" 
-        r = requests.get(url, headers=headers)
+        params = {
+            "league" : dicts.updatedLeagues[league_name],
+            "season" : 2025
+        }
+        url = consts.URL_BASE + "standings"
+
+        r = requests.get(url, headers=headers, params=params)
         digest = r.json()
 
         image = await drawing.GetTableImage(digest) #Get table image
@@ -54,9 +66,9 @@ class FBDataCog(commands.Cog):
             image.save(image_binary, "PNG")
             image_binary.seek(0)
             await int_msg.edit(attachments=[dc.File(fp=image_binary, filename='image.png')])
-            print(f"Posted {league_code} table for {interaction.user}.\n")
+            print(f"Posted {league_name} table for {interaction.user}.\n")
 
-    
+        
 
     #Show the user available leagues
     @fbdata.command(name="available_leagues", description="Get a list of available leagues.")
@@ -65,9 +77,10 @@ class FBDataCog(commands.Cog):
         cb = await interaction.response.defer(ephemeral=True, thinking=True) #Send thinking response
         int_msg = cb.resource
 
-        responseContent = "The following leagues (and associated codes) are available:\n"
-        for name, code in dicts.updatedLeagues.items():
-            responseContent += f"* {name} ({code})\n"
+        #Look at our list of leagues we care about and print out each name
+        responseContent = "The following leagues are available:\n"
+        for name in dicts.updatedLeagues.values():
+            responseContent += f"* {name}\n"
         
         embed = dc.Embed(colour=dc.Colour.from_str(consts.PREM_COLOUR))
         embed.add_field(name="Available Leagues", value=responseContent)

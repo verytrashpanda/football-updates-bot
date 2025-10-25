@@ -3,10 +3,10 @@ import utils.bot_constants as consts
 import utils.secret_constants as sConsts
 
 #I define a list of leagues we care about here and their associated ID. API-football has 7816 leagues - we do not care about most of them.
-interestedLeagues = {
-    39 : "Premier League",
-    40 : "Championship",
-    2 : "UEFA Champions League"
+updatedLeagues = {
+    "Premier League" : 39,
+    "Championship" : 40,
+    "UEFA Champions League" : 2
 }
 
 #dict of preferred (aka correct) aliases for clubs
