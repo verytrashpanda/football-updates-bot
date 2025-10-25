@@ -23,11 +23,9 @@ class FBDataCog(commands.Cog):
         
 
     fbdata = app_commands.Group(
-        name="fbdata",
+        name="data",
         description="Football data functionality."
     )
-
-
 
     #Search and print a league table
     @fbdata.command(name="standings", description="Print a league table.", )
@@ -57,6 +55,8 @@ class FBDataCog(commands.Cog):
             image_binary.seek(0)
             await int_msg.edit(attachments=[dc.File(fp=image_binary, filename='image.png')])
             print(f"Posted {league_code} table for {interaction.user}.\n")
+
+    
 
     #Show the user available leagues
     @fbdata.command(name="available_leagues", description="Get a list of available leagues.")

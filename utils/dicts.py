@@ -2,17 +2,12 @@ import requests
 import utils.bot_constants as consts
 import utils.secret_constants as sConsts
 
-#We want to use our user-added API key and see what leagues they have access to, which we can do by just pulling "competitions". Will sync if you have more access.
-url = consts.URL_BASE + f"competitions" 
-r = requests.get(url, headers=sConsts.HEADERS)
-digest = r.json()
-
-#Then we want to map their standard names to their codes, which we use in urls.
-updatedLeagues: dict = {}
-for comp in digest["competitions"]:
-    updatedLeagues[comp["name"]] = comp["code"]
-#Now we have a dict of the leagues the bot have access to and their associated codes.
-
+#I define a list of leagues we care about here and their associated ID. API-football has 7816 leagues - we do not care about most of them.
+interestedLeagues = {
+    39 : "Premier League",
+    40 : "Championship",
+    2 : "UEFA Champions League"
+}
 
 #dict of preferred (aka correct) aliases for clubs
 #I don't like to use the football-data.org shortNames due to error ("Nottingham" instead of "Forest" etc).
