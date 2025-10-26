@@ -2,7 +2,7 @@ import discord as dc
 from discord.ext import commands
 from discord import app_commands
 import requests
-import datetime
+from datetime import datetime
 import random
 import json
 import utils.bot_constants as consts
@@ -52,8 +52,19 @@ class FBDataCog(commands.Cog):
         with BytesIO() as image_binary:
             image.save(image_binary, "PNG")
             image_binary.seek(0)
-            await int_msg.edit(attachments=[dc.File(fp=image_binary, filename='image.png')])
-            print(f"Posted {league_name} table for {interaction.user}.\n")
+
+            #Create a discord.File
+            imageFile = dc.File(fp=image_binary, filename='image.png')
+
+            #Create an embed
+            embed = dc.Embed(title=f"{league_name} table", colour=dc.Colour.from_str(consts.PREM_COLOUR), timestamp = datetime.now())
+            embed.set_image(url="attachment://image.png")
+            embed.set_footer(text="Last updated at:")
+
+            #Edit message
+            await int_msg.edit(embed=embed, attachments=[imageFile])
+
+        print(f"Posted {league_name} table for {interaction.user}.\n")
 
         
 

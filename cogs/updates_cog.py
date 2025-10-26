@@ -29,28 +29,27 @@ class UpdatesCog(commands.Cog):
     #When the bot is turned on, we start "watching" the leagues we're interested in.
     async def cog_load(self):
         if self.watching:
-            self.WatchInactives.start()
+            self.WatchActiveLeagues.start()
 
-    params = {
-            "league" : 39,
-            "season" : 2025
-        }
-
-    digest = PullRequest("standings", params)
-
-    with open("datacache/data.json", "w") as f:
-        json.dump(digest, f, indent=2)
-
-    #We define our leagues in two states - active and inactive. While we want to actively watch some leagues for score updates, we inactively want to watch all leagues and store
-    #their standings to file to reduce API calls.
-    #Inactive leagues have no matches being played, and no matches to be played within the next two hours.
-    #Because they have no activity happening, they only need to be updated once a day (essentially to check for points deductions.). 24 calls per day per league.
-    #We write these things to file.
+    #This is the function watch any league that does not have a match in the next 2 hours.
     @tasks.loop(hours=24)
-    async def WatchInactives(self):
+    async def WatchInactives(self) -> None:
         lastCheckTime = datetime.now()
         print(f"Checking inactive leagues at {lastCheckTime}...")
 
-        
+    #This is our function to update league tables *actively*. We only use this when a match is BEING PLAYED actively - over a game this will be called ~120 times.
+    #Over, for example, a 4 match Premier League Saturday, this will be called about 500 times.
+    @tasks.loop(seconds=60)
+    async def WatchActiveLeagues(self) -> None:
+        lastCheckTime = datetime.now()
+        print(f"Checking ACTIVE league tables at {lastCheckTime}.")
 
-        
+        for leagueName, id in dicts.watchingLeagues.items():
+            params = {"league" : id, "season" : 2025}
+            digest = PullRequest("standings", params=params)
+
+            digest["lastChecked"] = str(lastCheckTime)
+
+            fileName = leagueName.replace(" ", "_")
+            with open(f"datacache/{fileName}.json", "w") as f:
+                json.dump(digest, f, indent=2)

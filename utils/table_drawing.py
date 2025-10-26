@@ -87,5 +87,5 @@ async def GetTableImage(digest) -> Image:
         
         #Draw the cell line
         draw.line(([0, yPos], [tableWidth, yPos]), width=1, fill="white")
-    
+
     return tableImage
