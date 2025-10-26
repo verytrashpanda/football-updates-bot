@@ -8,12 +8,10 @@ import json
 import utils.bot_constants as consts
 import utils.dicts as dicts
 import utils.table_drawing as drawing
+from utils.pull_request import PullRequest
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont, ImageText, ImageFilter
 from utils.autocompletes import LeagueNameAutocomplete
-
-urlBase = consts.URL_BASE #Base url to make API requests from
-headers = consts.HEADERS #Header with our API token
 
 #This cog will deal with all commands that pull from the football-data.org API for stats and updates.
 class FBDataCog(commands.Cog):
@@ -46,10 +44,7 @@ class FBDataCog(commands.Cog):
             "league" : dicts.updatedLeagues[league_name],
             "season" : 2025
         }
-        url = consts.URL_BASE + "standings"
-
-        r = requests.get(url, headers=headers, params=params)
-        digest = r.json()
+        digest = PullRequest("standings", params)
 
         image = await drawing.GetTableImage(digest) #Get table image
 

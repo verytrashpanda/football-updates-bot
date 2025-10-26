@@ -14,4 +14,3 @@ BOT_KEY = sConsts.BOT_KEY
 TEST_GUILD_ID = sConsts.TEST_GUILD_ID
 API_KEY = sConsts.TEST_GUILD_ID
 
-#Function to generate a url
