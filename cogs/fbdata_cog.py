@@ -25,7 +25,7 @@ class FBDataCog(commands.Cog):
         name="fbdata",
         description="Football data functionality."
     )
-
+    
     #Search and print a league table
     @fbdata.command(name="standings", description="Print a league table.")
     @app_commands.autocomplete(league_name=LeagueNameAutocomplete)

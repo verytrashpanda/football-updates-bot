@@ -1,6 +1,6 @@
 import discord as dc
 import discord.interactions as interacts
-from discord.ext import commands
+from discord.ext import commands, tasks
 from discord import app_commands
 from datetime import datetime, timezone
 import random
@@ -39,8 +39,8 @@ async def on_ready():
     await bot.add_cog(FBDataCog(bot))
     await bot.add_cog(UpdatesCog(bot))
     print(f'We have logged in as {bot.user}.\n')
-
     
+
     for i in consts.UPDATED_GUILDS:
         #These lines automatically sync our command tree to our test guild just so testing is easier 
         testGuild = bot.get_guild(i)
