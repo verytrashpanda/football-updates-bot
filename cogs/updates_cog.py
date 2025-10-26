@@ -9,6 +9,7 @@ import utils.dicts as dicts
 import time
 import asyncio
 import json
+from utils.pull_request import PullRequest
 
 
 
@@ -30,17 +31,14 @@ class UpdatesCog(commands.Cog):
         if self.watching:
             self.WatchInactives.start()
 
-    url = consts.URL_BASE + "standings"
-    headers = consts.HEADERS
     params = {
             "league" : 39,
             "season" : 2025
         }
 
-    r = requests.get(url, headers=headers, params=params)
-    digest = r.json()
+    digest = PullRequest("standings", params)
 
-    with open("data.json", "w") as f:
+    with open("datacache/data.json", "w") as f:
         json.dump(digest, f, indent=2)
 
     #We define our leagues in two states - active and inactive. While we want to actively watch some leagues for score updates, we inactively want to watch all leagues and store

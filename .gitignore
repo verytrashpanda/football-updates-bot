@@ -2,6 +2,7 @@
 secret_constants.py
 test.py
 test2.py
+datacache
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
