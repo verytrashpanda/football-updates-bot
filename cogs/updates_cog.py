@@ -5,7 +5,6 @@ import requests
 from datetime import datetime
 import random
 import utils.bot_constants as consts
-import utils.secret_constants as sConsts
 import utils.dicts as dicts
 import time
 import asyncio
@@ -32,7 +31,7 @@ class UpdatesCog(commands.Cog):
             self.WatchInactives.start()
 
     url = consts.URL_BASE + "standings"
-    headers = sConsts.HEADERS
+    headers = consts.HEADERS
     params = {
             "league" : 39,
             "season" : 2025

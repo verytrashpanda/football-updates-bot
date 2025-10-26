@@ -9,12 +9,11 @@ import utils.bot_constants as consts
 import utils.dicts as dicts
 import utils.table_drawing as drawing
 from io import BytesIO
-import utils.secret_constants as sConsts
 from PIL import Image, ImageDraw, ImageFont, ImageText, ImageFilter
 from utils.autocompletes import LeagueNameAutocomplete
 
 urlBase = consts.URL_BASE #Base url to make API requests from
-headers = sConsts.HEADERS #Header with our API token
+headers = consts.HEADERS #Header with our API token
 
 #This cog will deal with all commands that pull from the football-data.org API for stats and updates.
 class FBDataCog(commands.Cog):

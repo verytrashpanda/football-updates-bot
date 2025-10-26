@@ -11,7 +11,6 @@ from cogs.silly_cog import SillyCog
 from cogs.fbdata_cog import FBDataCog
 from cogs.updates_cog import UpdatesCog
 import utils.bot_constants as consts 
-import utils.secret_constants as sConsts
 import utils.dicts as dicts
 
 prefix: str = "!"
@@ -23,8 +22,8 @@ class Bot(commands.Bot):
         super().__init__(command_prefix=prefix, intents=intents)
 
     async def setup_hook(self):
-        self.tree.copy_global_to(guild=dc.Object(id=sConsts.TEST_GUILD_ID))
-        await self.tree.sync(guild=dc.Object(id=sConsts.TEST_GUILD_ID))
+        self.tree.copy_global_to(guild=dc.Object(id=consts.TEST_GUILD_ID))
+        await self.tree.sync(guild=dc.Object(id=consts.TEST_GUILD_ID))
 
 
 intents = dc.Intents.default()
@@ -43,7 +42,7 @@ async def on_ready():
     
 
     #These lines automatically sync our command tree to our test guild just so testing is easier 
-    testGuild = bot.get_guild(sConsts.TEST_GUILD_ID)
+    testGuild = bot.get_guild(consts.TEST_GUILD_ID)
     print(f"Synchronising commands for guild id {testGuild.id}.\n")
     bot.tree.copy_global_to(guild=testGuild)
     cmd_list = await bot.tree.sync(guild=testGuild)
@@ -62,4 +61,4 @@ async def ping(interaction):
     await interaction.response.send_message("Fuck off cunt")
     print(f"Pinged by {interaction.user}.\n")
 
-bot.run(sConsts.BOT_KEY)
+bot.run(consts.BOT_KEY)
