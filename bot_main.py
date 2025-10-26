@@ -43,7 +43,7 @@ async def on_ready():
     for i in consts.UPDATED_GUILDS:
         #These lines automatically sync our command tree to our test guild just so testing is easier 
         testGuild = bot.get_guild(i)
-        print(f"Synchronising commands for guild id {testGuild.id}.\n")
+        print(f"Synchronising commands for guild id {testGuild.id}.")
         bot.tree.copy_global_to(guild=testGuild)
         cmd_list = await bot.tree.sync(guild=testGuild)
     print(f'{len(cmd_list)} commands were synchronized to guilds.\n')
