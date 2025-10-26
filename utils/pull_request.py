@@ -10,5 +10,5 @@ init(autoreset=True)
 def PullRequest(endpoint: str, params: dict) -> dict:
     url = consts.URL_BASE + endpoint
     r = requests.get(url, headers=consts.HEADERS, params=params)
-    print(Fore.LIGHTBLACK_EX + "--> Making GET request to {url}. <--")
+    print(Fore.LIGHTBLACK_EX + f"--> Making GET request to {url}. <--")
     return (r.json())
