@@ -7,6 +7,7 @@ import random
 import asyncio
 import requests
 import json
+import os
 from cogs.silly_cog import SillyCog
 from cogs.fbdata_cog import FBDataCog
 from cogs.updates_cog import UpdatesCog

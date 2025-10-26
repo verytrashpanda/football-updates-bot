@@ -5,6 +5,7 @@ import requests
 from datetime import datetime
 import random
 import json
+import os
 import utils.bot_constants as consts
 import utils.dicts as dicts
 import utils.table_drawing as drawing
@@ -39,12 +40,21 @@ class FBDataCog(commands.Cog):
             print(f"Unknown/unusable league code {league_name} entered, exiting command.\n")
             return None
 
-        #Generate the required URL payload and get the request
-        params = {
-            "league" : dicts.updatedLeagues[league_name],
-            "season" : 2025
-        }
-        digest = PullRequest("standings", params)
+        #Check if we already have a standings json file
+        filepathCheck = f"datacache/{league_name.replace(" ", "_")}.json"
+        if os.path.exists(filepathCheck):
+            #If we do, just retrieve it and use it as our digest
+            with open(filepathCheck, "r") as f:
+                digest = json.load(f)
+            print(f"Retrieving .json from {filepathCheck}")
+        else:
+            #Generate a new digest with a pull request
+            params = {
+                "league" : dicts.updatedLeagues[league_name],
+                "season" : 2025
+            }
+            digest = PullRequest("standings", params)
+            digest["lastChecked"] = str(datetime.now())
 
         image = await drawing.GetTableImage(digest) #Get table image
 
@@ -57,7 +67,8 @@ class FBDataCog(commands.Cog):
             imageFile = dc.File(fp=image_binary, filename='image.png')
 
             #Create an embed
-            embed = dc.Embed(title=f"{league_name} table", colour=dc.Colour.from_str(consts.PREM_COLOUR), timestamp = datetime.now())
+            timestamp = datetime.strptime(digest["lastChecked"], "%Y-%m-%d %H:%M:%S.%f")
+            embed = dc.Embed(colour=dc.Colour.from_str(consts.PREM_COLOUR), timestamp=timestamp)
             embed.set_image(url="attachment://image.png")
             embed.set_footer(text="Last updated at:")
 

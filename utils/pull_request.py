@@ -5,4 +5,5 @@ import requests
 def PullRequest(endpoint: str, params: dict) -> dict:
     url = consts.URL_BASE + endpoint
     r = requests.get(url, headers=consts.HEADERS, params=params)
+    print(f"Making GET request to {url}.")
     return (r.json())
