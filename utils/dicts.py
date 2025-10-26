@@ -9,6 +9,10 @@ updatedLeagues = {
     "UEFA Champions League" : 2
 }
 
+watchingLeagues = {
+    "Premier League" : 39,
+}
+
 #dict of preferred (aka correct) aliases for clubs
 #I don't like to use the football-data.org shortNames due to error ("Nottingham" instead of "Forest" etc).
 #Yes, this is over-engineering and completely overcomplicating things, but I am so anal about the correct names being used for things in football. 
