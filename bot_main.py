@@ -68,6 +68,7 @@ async def botTime(interaction):
     localTime = datetime.now()
     utcTime = datetime.now(timezone.utc)
     await interaction.response.send_message(f"Current local time = `{localTime}`\nCurrent UTC time = `{utcTime}`")
+    print(f"Printed local time for {interaction.user}.\n")
 
 
 
