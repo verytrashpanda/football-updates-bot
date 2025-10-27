@@ -2,6 +2,7 @@ from datetime import datetime
 
 from datetime import datetime, timezone
 
+#You pass a ["fixture"] list to this from the API and it assigns/updates itself.
 class Fixture:
     def UpdateMe(self, jsonDict):
         isoTime = jsonDict["fixture"]["date"]
