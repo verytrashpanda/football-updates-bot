@@ -24,13 +24,12 @@ class UpdatesCog(commands.Cog):
         description="Live update commands."
     )
 
-    async def GetTodayFixtures(self) -> list:
+    #Returns a list of all of today's Fixtures
+    async def GetTodayFixtures(self) -> list[Fixture]:
         today = datetime.now() #Get current date and time
         formattedToday = today.strftime("%Y-%m-%d") # Format date as yyyy-mm-dd
-
-        testToday = "2025-10-26"
         
-        digest = PullRequest("fixtures", {"league" : 39, "season" : 2025, "date" : testToday})
+        digest = PullRequest("fixtures", {"league" : 39, "season" : 2025, "date" : formattedToday})
 
         fixtureList = []
         for fixture in digest["response"]:
@@ -47,13 +46,24 @@ class UpdatesCog(commands.Cog):
 
     @tasks.loop(time = checkAheadTime)
     async def checkTodayFixtures(self) -> None:
-        self.todayFixtures = [] #Clear the list of fixtures (unnecessary but just in case)
+        self.todayFixtures = [] #Clear the list of fixtures
 
         todayFixturesJson = await self.GetTodayFixtures()
 
     @updates.command()
-    async def test(self, interaction):
-        newList = await self.GetTodayFixtures()
+    async def today(self, interaction):
+        print(f"performing today() for {interaction.user}.")
 
-        for i in newList:
-            print(i)
+
+        newList = await self.GetTodayFixtures()
+        newText = ""
+
+        if len(newList) == 0:
+            newText = "No fixtures today."
+        else:
+            for i in newList:
+                newText += f"{i.date}: {i.homeTeam} vs {i.awayTeam} at {i.stadium}.\n"
+
+        embed = dc.Embed()
+        embed.add_field(name="Today's fixtures:", value=newText)
+        await interaction.response.send_message(embed=embed)
