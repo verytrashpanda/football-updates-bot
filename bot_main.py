@@ -2,7 +2,7 @@ import discord as dc
 import discord.interactions as interacts
 from discord.ext import commands, tasks
 from discord import app_commands
-from datetime import datetime, timezone
+from datetime import datetime, timezone, time
 import random
 import asyncio
 import requests
@@ -39,7 +39,6 @@ async def on_ready():
     await bot.add_cog(FBDataCog(bot))
     await bot.add_cog(UpdatesCog(bot))
     print(f'We have logged in as {bot.user}.\n')
-    
 
     for i in consts.UPDATED_GUILDS:
         #These lines automatically sync our command tree to our test guild just so testing is easier 
@@ -65,9 +64,15 @@ async def ping(interaction):
     print(f"Pinged by {interaction.user}.\n")
 
 @bot.tree.command(name="time", description="debug: get bot's local and utc time")
-async def time(interaction):
+async def botTime(interaction):
     localTime = datetime.now()
     utcTime = datetime.now(timezone.utc)
     await interaction.response.send_message(f"Current local time = `{localTime}`\nCurrent UTC time = `{utcTime}`")
 
+
+
+
+
+
 bot.run(consts.BOT_KEY)
+
