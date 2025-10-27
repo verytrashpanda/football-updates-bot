@@ -6,7 +6,6 @@ from datetime import datetime, timezone, timedelta, time
 import random
 import utils.bot_constants as consts
 import utils.dicts as dicts
-import time
 import asyncio
 from utils.classes import Fixture
 import json
@@ -42,7 +41,7 @@ class UpdatesCog(commands.Cog):
     async def cog_load(self):
         self.checkTodayFixtures.start()
 
-    checkAheadTime = time(hours=0, minutes=15) #The time to check today's fixtures
+    checkAheadTime = time(hour=0, minute=15) #The time to check today's fixtures
     todayFixtures: list = [] #List of Fixture classes that resets at checkAheadTime each day
 
 
@@ -52,9 +51,9 @@ class UpdatesCog(commands.Cog):
 
         todayFixturesJson = await self.GetTodayFixtures()
 
-    @updates.command(name="test")
-    async def test(self):
-        newList = self.GetTodayFixtures()
+    @updates.command()
+    async def test(self, interaction):
+        newList = await self.GetTodayFixtures()
 
         for i in newList:
             print(i)
