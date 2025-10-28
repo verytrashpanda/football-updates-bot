@@ -69,8 +69,5 @@ async def botTime(interaction):
 
 
 
-
-
-
 bot.run(consts.BOT_KEY)
 
