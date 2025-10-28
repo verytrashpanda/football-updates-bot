@@ -32,8 +32,8 @@ class MatchEvent:
 #You pass a ["fixture"] dict to this from the API and it assigns/updates itself.
 class Fixture:
     def __init__(self, jsonDict):
-        self.eventList = []
-        self.jsonDict = jsonDict #Store the entire dictionary in the class just in case.
+        self.eventList: list[MatchEvent] = []
+        self.jsonDict: dict = jsonDict #Store the entire dictionary in the class just in case.
         self.UpdateMe(jsonDict) #Initialise all the variables that can change
 
         #Initalise the variables which will never change in this class:
