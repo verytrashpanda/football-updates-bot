@@ -75,8 +75,10 @@ async def botTime(interaction):
 async def watch(interaction):
     if bot.get_cog(UpdatesCog) == None:
         await bot.add_cog(UpdatesCog)
+        await interaction.response.send_message(f"watching on")
     else:
         await bot.remove_cog(UpdatesCog)
+        await interaction.response.send_message(f"watching off")
 
 bot.run(consts.BOT_KEY)
 
