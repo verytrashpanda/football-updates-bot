@@ -7,7 +7,7 @@ init(autoreset=True)
 
 from utils.classes import Fixture, MatchEvent
 from utils.pull_request import PullRequest
-from utils.functions import GetReportString
+from utils.functions import ReportWriter
 
 #Premier League update functionality
 class UpdatesCog(commands.Cog):
@@ -32,8 +32,8 @@ class UpdatesCog(commands.Cog):
     #Pull all the currently live Fixtures in our league
     async def GetLiveFixtures(self) -> list[Fixture]:
 
-        #digest = PullRequest("fixtures", params={"live":"all"})
-        digest = PullRequest("fixtures", params={"live":"all", "league":self.leagueID, "season":self.currentSeason})
+        digest = PullRequest("fixtures", params={"live":"all"})
+        #digest = PullRequest("fixtures", params={"live":"all", "league":self.leagueID, "season":self.currentSeason})
 
         fixtureList = []
         for fixtureJSON in digest["response"]:
@@ -58,41 +58,6 @@ class UpdatesCog(commands.Cog):
                 print(Fore.BLUE + f"Fixture {newFixture.homeTeamName} vs {newFixture.awayTeamName} added to live fixtures list!")
                 self.liveFixtures.append(newFixture)
 
-    #Takes a fixture and an event. Generates a report.
-    async def ReportWriter(self, fixture: Fixture, event: MatchEvent) -> str:
-        print(Fore.BLUE + f"EVENT: {event.detail} at {event.normalTime} by {event.player} minutes in {fixture.homeTeamName} vs {fixture.awayTeamName}.")
-
-        reportString: str = ""
-        eventString: str = ""
-        timeString: str = ""
-
-        scoreCard: str = f"{fixture.homeTeamName} {fixture.homeGoals} - {fixture.awayGoals} {fixture.awayTeamName}"
-
-        if event.extraTime == None:
-            timeString = f"{event.normalTime}'"
-        else:
-            timeString = f"{event.normalTime}+{event.extraTime}'"
-
-        if event.type == "Card":
-            if event.comment == None:
-                eventString = f"{event.player} of {event.team} shown a {event.detail}."
-            else:
-                eventString = f"{event.player} of {event.team} shown a {event.detail} for {event.comment.lower()}."
-        elif event.type == "Goal":
-            if event.detail == "Normal Goal":
-                eventString = f"**GOAL!** {scoreCard}. {event.team} score! Scorer: {event.player}, assist: {event.assist}"
-            elif event.detail == "Penalty":
-                eventString = f"GOAL! {scoreCard}. {event.team} convert the penalty! Scorer: {event.player}"
-            elif event.detail == "Missed Penalty":
-                eventString = f"{event.player} misses a penalty for {event.team}. {scoreCard}"
-        elif event.type == "subst":
-            eventString = f"{event.team} make a sub. {event.player} off, {event.assist} on."
-        else:
-            eventString = event.detail
-
-        reportString = f"{timeString}: {eventString}"
-        return reportString
-
 
     #When the cog loads this runs
     async def cog_load(self):
@@ -115,11 +80,11 @@ class UpdatesCog(commands.Cog):
             newEventList: list[MatchEvent] = liveFixture.ReportEvents()
             for event in newEventList:
                 #Pass each event with its Fixture to the ReportWriter() function.
-                sendString = await self.ReportWriter(liveFixture, event)
+                sendEmbed: dc.Embed = await ReportWriter(liveFixture, event)
 
                 for textChannel in self.updateGuildList:
                     try:
-                        await textChannel.send(content=sendString)
+                        await textChannel.send(embed=sendEmbed)
                     except:
                         pass
 
