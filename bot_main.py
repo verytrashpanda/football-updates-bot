@@ -53,7 +53,11 @@ async def sync(ctx):
     cmd_list = await bot.tree.sync(guild=ctx.guild)
     print(f'{len(cmd_list)} commands were synchronized to guild {ctx.guild.id}.\n')
 
-#DEBUG COMMANDS
+
+
+
+
+#-----DEBUG COMMANDS-----
 
 @bot.tree.command(name="ping")
 async def ping(interaction):

@@ -43,6 +43,9 @@ class Fixture:
         self.homeTeamName: str = jsonDict["teams"]["home"]["name"]
         self.awayTeamName: str = jsonDict["teams"]["away"]["name"]
 
+        #The last reported status of the match.
+        self.lastReportedStatus = ""
+
     def UpdateMe(self, jsonDict) -> None: #This function updates the attributes that should change
         #The passed in jsonDict is stored as a variable.
         self.jsonDict: dict = jsonDict
