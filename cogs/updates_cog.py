@@ -33,8 +33,8 @@ class UpdatesCog(commands.Cog):
     #Pull all the currently live Fixtures in our league
     async def GetLiveFixtures(self) -> list[Fixture]:
 
-        digest = PullRequest("fixtures", params={"live":"all"})
-        #digest = PullRequest("fixtures", params={"live":"all", "league":self.leagueID, "season":self.currentSeason})
+        #digest = PullRequest("fixtures", params={"live":"all"})
+        digest = PullRequest("fixtures", params={"live":"all", "league":self.leagueID, "season":self.currentSeason})
 
         fixtureList = []
         for fixtureJSON in digest["response"]:
@@ -108,7 +108,7 @@ class UpdatesCog(commands.Cog):
                     except:
                         pass
 
-        #STATUS CHANGE REPORTING:
+        #--MATCH STATUS CHANGE REPORTING--
         #Here we look through the new live ones to report changes of status
         for fixture in self.liveFixtures:
             if fixture.statusCode != fixture.lastReportedStatus:
@@ -121,10 +121,8 @@ class UpdatesCog(commands.Cog):
                         await textChannel.send(string)
                     except:
                         pass
-                
 
-
-        #MATCH END REPORTING:
+        #--MATCH END REPORTING--
         currentLiveFixtureIDs: list[int] = []
         newLiveFixtureIDs: list[int] = []
         #The last thing we do is check for finished matches. First we get a list of current and new liveFixture IDs:
@@ -159,7 +157,8 @@ class UpdatesCog(commands.Cog):
     async def WatchLeagueSetup(self):
         self.liveFixtures = await self.GetLiveFixtures() #Update the liveFixtures list.
         for fixture in self.liveFixtures:
-            fixture.lastReportedStatus = fixture.statusCode
+            #Update the lastReportedStatus - we don't want to be reporting on statuses as we launch only when they change.
+            fixture.lastReportedStatus = fixture.statusCode 
             for event in fixture.eventList:
                 #For each event in each fixture, set all events that happened before startup so reported = True
                 event.reported = True
