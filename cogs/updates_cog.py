@@ -42,7 +42,7 @@ class UpdatesCog(commands.Cog):
 
         return fixtureList
     
-    async def SendAllChannels(self, embed: dc.Embed, text: str) -> None:
+    async def SendAllChannels(self, embed: dc.Embed = None, text: str = "") -> None:
         for textChannel in self.updateGuildList:
             try:
                 await textChannel.send(embed=embed, content=text)
@@ -66,9 +66,7 @@ class UpdatesCog(commands.Cog):
                 print(Fore.BLUE + f"Fixture {newFixture.homeTeamName} vs {newFixture.awayTeamName} added to live fixtures list!")
                 self.liveFixtures.append(newFixture)
 
-                for textChannel in self.updateGuildList:
-                    await textChannel.send(f"{newFixture.homeTeamName} vs {newFixture.awayTeamName} kicks off!")
-                
+                await self.SendAllChannels(text = f"{newFixture.homeTeamName} vs {newFixture.awayTeamName} kicks off!") 
                 newFixture.lastReportedStatus = newFixture.statusCode
 
 
@@ -90,7 +88,7 @@ class UpdatesCog(commands.Cog):
         #First: get the live fixtures from the league.
         newLiveFixtures: list[Fixture] = await self.GetLiveFixtures()
         print(Fore.BLUE + f"Retrieved {len(newLiveFixtures)} live fixtures.")
-
+        #Update self.liveFixtures with them.
         await self.UpdateLiveFixtures(newLiveFixtures)        
 
         #EVENT REPORTING:
@@ -102,11 +100,7 @@ class UpdatesCog(commands.Cog):
                 #Pass each event with its Fixture to the ReportWriter() function.
                 sendEmbed: dc.Embed = await ReportWriter(liveFixture, event)
 
-                for textChannel in self.updateGuildList:
-                    try:
-                        await textChannel.send(embed=sendEmbed)
-                    except:
-                        pass
+                await self.SendAllChannels(embed=sendEmbed)
 
         #--MATCH STATUS CHANGE REPORTING--
         #Here we look through the new live ones to report changes of status
@@ -116,11 +110,7 @@ class UpdatesCog(commands.Cog):
                 print(string)
                 fixture.lastReportedStatus = fixture.statusCode
 
-                for textChannel in self.updateGuildList:
-                    try:
-                        await textChannel.send(string)
-                    except:
-                        pass
+                await self.SendAllChannels(text=string)
 
         #--MATCH END REPORTING--
         currentLiveFixtureIDs: list[int] = []
@@ -130,7 +120,6 @@ class UpdatesCog(commands.Cog):
             currentLiveFixtureIDs.append(i.id)
         for i in newLiveFixtures:
             newLiveFixtureIDs.append(i.id)
-
         #Now, get a list of all the *CURRENT* live fixture IDs that did not come in the most recent batch of newFixtureIDs:
         endedFixtureIDs = list(set(currentLiveFixtureIDs) - set(newLiveFixtureIDs))
         #All the fixture IDs in this list are fixtures which have *ended*. They won't have shown up in our new PullRequest, so we need to do one final pull to see how they ended.
@@ -139,12 +128,8 @@ class UpdatesCog(commands.Cog):
             endedFixture = Fixture(endedFixtureJSON["response"][0])
 
             matchEndString = f"Final whistle: {endedFixture.homeTeamName} {endedFixture.homeGoals} - {endedFixture.awayGoals} {endedFixture.awayTeamName}"
-            print(Fore.BLUE + f"MATCH END: {endedFixture.homeTeamName} vs {endedFixture.awayTeamName}")
-            for textChannel in self.updateGuildList:
-                    try:
-                        await textChannel.send(content=matchEndString)
-                    except:
-                        pass
+            print(Fore.BLUE + matchEndString)
+            await self.SendAllChannels(text=matchEndString)
             
             #And now we need to remove this fixture from the liveFixture list.
             for fixture in self.liveFixtures:
