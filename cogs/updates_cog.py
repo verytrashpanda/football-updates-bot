@@ -80,6 +80,9 @@ class UpdatesCog(commands.Cog):
 
         self.LeagueWatcher.start()
 
+    async def cog_unload(self):
+        self.LeagueWatcher.cancel()
+
     #Live league watcher/update giver
     @tasks.loop(seconds=15)
     async def LeagueWatcher(self) -> None:

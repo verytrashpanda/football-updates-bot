@@ -71,7 +71,12 @@ async def botTime(interaction):
     await interaction.response.send_message(f"Current local time = `{localTime}`\nCurrent UTC time = `{utcTime}`")
     print(f"Printed local time for {interaction.user}.\n")
 
-
+@bot.tree.command(name="watch", description="toggle watching on or off")
+async def watch(interaction):
+    if bot.get_cog(UpdatesCog) == None:
+        await bot.add_cog(UpdatesCog)
+    else:
+        await bot.remove_cog(UpdatesCog)
 
 bot.run(consts.BOT_KEY)
 
