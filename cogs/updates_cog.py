@@ -32,8 +32,8 @@ class UpdatesCog(commands.Cog):
     #Pull all the currently live Fixtures in our league
     async def GetLiveFixtures(self) -> list[Fixture]:
 
-        digest = PullRequest("fixtures", params={"live":"all"})
-        #digest = PullRequest("fixtures", params={"live":"all", "league":self.leagueID, "season":self.currentSeason})
+        #digest = PullRequest("fixtures", params={"live":"all"})
+        digest = PullRequest("fixtures", params={"live":"all", "league":self.leagueID, "season":self.currentSeason})
 
         fixtureList = []
         for fixtureJSON in digest["response"]:
