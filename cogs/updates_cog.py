@@ -33,8 +33,8 @@ class UpdatesCog(commands.Cog):
     #Pull all the currently live Fixtures in our league
     async def GetLiveFixtures(self) -> list[Fixture]:
 
-        #digest = PullRequest("fixtures", params={"live":"all"})
-        digest = PullRequest("fixtures", params={"live":"all", "league":self.leagueID, "season":self.currentSeason})
+        digest = PullRequest("fixtures", params={"live":"all"})
+        #digest = PullRequest("fixtures", params={"live":"all", "league":self.leagueID, "season":self.currentSeason})
 
         fixtureList = []
         for fixtureJSON in digest["response"]:
@@ -42,10 +42,10 @@ class UpdatesCog(commands.Cog):
 
         return fixtureList
     
-    async def SendAllChannels(self, channelList: list[dc.TextChannel], embed: dc.Embed, text: str) -> None:
-        for textChannel in channelList:
+    async def SendAllChannels(self, embed: dc.Embed, text: str) -> None:
+        for textChannel in self.updateGuildList:
             try:
-                await textChannel.send(embed=embed)
+                await textChannel.send(embed=embed, content=text)
             except:
                 pass
 
@@ -66,7 +66,7 @@ class UpdatesCog(commands.Cog):
                 print(Fore.BLUE + f"Fixture {newFixture.homeTeamName} vs {newFixture.awayTeamName} added to live fixtures list!")
                 self.liveFixtures.append(newFixture)
 
-                for textChannel in self.channelList:
+                for textChannel in self.updateGuildList:
                     await textChannel.send(f"{newFixture.homeTeamName} vs {newFixture.awayTeamName} kicks off!")
                 
                 newFixture.lastReportedStatus = newFixture.statusCode
@@ -152,12 +152,12 @@ class UpdatesCog(commands.Cog):
                     self.liveFixtures.remove(fixture)
                     return
                 
-    #Before we start watching the league, we need to get everything up to date on the current live fixtures so that we don't spam loads of events as they load in!
+    #Before we start watching the league, we need to get everything up to date on the current live fixtures so that we don't spam loads of events as they load in
     @LeagueWatcher.before_loop
     async def WatchLeagueSetup(self):
         self.liveFixtures = await self.GetLiveFixtures() #Update the liveFixtures list.
         for fixture in self.liveFixtures:
-            #Update the lastReportedStatus - we don't want to be reporting on statuses as we launch only when they change.
+            #Update the lastReportedStatus - we don't want to be reporting on statuses as we launch, only when they change.
             fixture.lastReportedStatus = fixture.statusCode 
             for event in fixture.eventList:
                 #For each event in each fixture, set all events that happened before startup so reported = True
@@ -169,7 +169,14 @@ class UpdatesCog(commands.Cog):
     @updates.command(name="sendhere", description="Send match updates here")
     async def sendhere(self, interaction):
         guild = interaction.channel
-        self.updateGuildList.append(guild)
+        if guild in self.updateGuildList:
+            self.updateGuildList.remove(guild)
+            await interaction.response.send_message("Match updates no longer being sent here.")
+            print(f"{interaction.user} turned off updates in channel {interaction.channel_id}")
+        else:
+            self.updateGuildList.append(guild)
+            await interaction.response.send_message("Match updates now being sent here.")
+            print(f"{interaction.user} asked for updates in channel {interaction.channel_id}")
         
-        await interaction.response.send_message("Match updates now being sent here.")
-        print(f"{interaction.user} asked for updates in channel {interaction.channel_id}")
+        
+        

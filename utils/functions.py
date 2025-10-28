@@ -3,11 +3,10 @@ import discord as dc
 from colorama import init, Fore, Style
 init(autoreset=True)
 
-#Takes a fixture and an event. Generates a report.
+#Takes a fixture and an event. Generates a report. Has a shit load of little extra caveats to it.
 async def ReportWriter(fixture: Fixture, event: MatchEvent) -> dc.Embed:
     print(Fore.BLUE + f"EVENT: {event.detail} at {event.normalTime} by {event.player} minutes in {fixture.homeTeamName} vs {fixture.awayTeamName}.")
 
-    reportString: str = ""
     eventString: str = ""
     timeString: str = ""
 
