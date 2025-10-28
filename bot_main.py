@@ -40,12 +40,12 @@ async def on_ready():
     await bot.add_cog(UpdatesCog(bot))
     print(f'We have logged in as {bot.user}.\n')
 
-    for i in consts.UPDATED_GUILDS:
-        #These lines automatically sync our command tree to our test guild just so testing is easier 
-        testGuild = bot.get_guild(i)
-        print(f"Synchronising commands for guild id {testGuild.id}.")
-        bot.tree.copy_global_to(guild=testGuild)
-        cmd_list = await bot.tree.sync(guild=testGuild)
+    
+    #These lines automatically sync our command tree to our test guild just so testing is easier 
+    testGuild = bot.get_guild(consts.TEST_GUILD_ID)
+    print(f"Synchronising commands for guild id {testGuild.id}.")
+    bot.tree.copy_global_to(guild=testGuild)
+    cmd_list = await bot.tree.sync(guild=testGuild)
     print(f'{len(cmd_list)} commands were synchronized to guilds.\n')
 
 #Syncing command to get slash commands to appear in the command list
