@@ -24,16 +24,18 @@ class UpdatesCog(commands.Cog):
         today = datetime.now() #Get current date and time
         formattedToday = today.strftime("%Y-%m-%d") # Format date as yyyy-mm-dd
         
-        digest = PullRequest("fixtures", {"league" : 39, "season" : 2025, "date" : formattedToday})
+        digest = PullRequest("fixtures", {"league" : 48, "season" : 2025, "date" : formattedToday})
 
         fixtureList = []
-        for fixture in digest["response"]:
-            fixtureList.append(Fixture(fixture))
+        for fixtureJson in digest["response"]:
+            fixtureList.append(Fixture(fixtureJson))
 
         return fixtureList
 
     async def cog_load(self):
         self.checkTodayFixtures.start()
+
+        
 
     checkAheadTime = time(hour=0, minute=15) #The time to check today's fixtures
     todayFixtures: list = [] #List of Fixture classes that resets at checkAheadTime each day
@@ -44,6 +46,7 @@ class UpdatesCog(commands.Cog):
         self.todayFixtures = [] #Clear the list of fixtures
 
         todayFixturesJson = await self.GetTodayFixtures()
+
 
     @updates.command()
     async def today(self, interaction):
