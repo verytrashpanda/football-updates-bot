@@ -1,17 +1,16 @@
 from datetime import datetime
 
-#You pass a ["team"] dict to this from afrom the api to get a class
-#class Team:
-    #def __init__(self, jsonDict):
-        #self.id: int = jsonDict["id"]
-        #self.name: str = jsonDict["name"]
-        #self.code: str = jsonDict["team"]["code"]
-        #self.founded: int = jsonDict["team"]["founded"]
-        #self.national: bool = jsonDict["team"]["national"]
-        #self.logo: str = jsonDict["logo"]
-
-        #self.venueName: str = jsonDict["venue"]["name"]
-        #self.venueCapacity: int = jsonDict["venue"]["capacity"]
+#Basic team information you need for a team in a fixture.
+class Team:
+    def __init__(self, jsonDict):
+        self.id: int = jsonDict["id"]
+        self.name: str = jsonDict["name"]
+        self.logo: str = jsonDict["logo"]
+        
+        try:
+            self.winner: bool = jsonDict["winner"] 
+        except:
+            pass
 
 #Defines a single event in a match.
 class MatchEvent:
@@ -33,18 +32,16 @@ class MatchEvent:
 #You pass a ["fixture"] dict to this from the API and it assigns/updates itself.
 class Fixture:
     def __init__(self, jsonDict):
-        self.UpdateMe(jsonDict) #Initialise all the variables that can change
         self.eventList = []
+        self.UpdateMe(jsonDict) #Initialise all the variables that can change
 
         #Initalise the variables which will never change in this class:
         self.id:int = jsonDict["fixture"]["id"]
         self.referee:str = jsonDict["fixture"]["referee"]
-        self.homeTeam:str = jsonDict["teams"]["home"]["name"]
-        self.homeTeamLogo:str = jsonDict["teams"]["home"]["logo"]
-        self.homeTeamID:int = jsonDict["teams"]["home"]["id"]
-        self.awayTeam:str = jsonDict["teams"]["away"]["name"]
-        self.awayTeamLogo:str = jsonDict["teams"]["away"]["logo"]
-        self.awayTeamID:int = jsonDict["teams"]["away"]["id"]
+
+        #Team classes
+        self.homeTeam: Team = jsonDict["teams"]["home"]
+        self.awayTeam: Team = jsonDict["teams"]["away"]
 
     def UpdateMe(self, jsonDict) -> None: #This function updates the attributes that should change
         #Date - can change if a match is rescheduled, but mostly shouldn't on the day.
@@ -70,7 +67,7 @@ class Fixture:
                     newEvent = MatchEvent(jsonDict["events"][i]) #Create a MatchEvent class from the dictionary
                     self.eventList.append(newEvent) #Add it to our maintained list
         except:
-            print("When updating a fixture, it had no events list.\n")
+            print("When updating/instantiating a fixture, it had no events list.")
 
     #Ask the class to check its events list, and return an ordered list of all MatchEvents with reported == False, then set them to True 
     def ReportEvents(self) -> list[MatchEvent]:
@@ -79,7 +76,7 @@ class Fixture:
         for event in self.eventList:
             if event.reported == False:
                 newEvents.append(event)
-                event.reported == True
+                event.reported = True
         
         return newEvents
 
