@@ -1,17 +1,12 @@
 import discord as dc
 from discord.ext import commands, tasks
 from discord import app_commands
-import requests
 from datetime import datetime, timezone, timedelta, time
-import random
-import utils.bot_constants as consts
-import utils.dicts as dicts
-import asyncio
-from utils.classes import Fixture
-import json
-from utils.pull_request import PullRequest
 from colorama import init, Fore, Style
 init(autoreset=True)
+
+from utils.classes import Fixture
+from utils.pull_request import PullRequest
 
 #Premier League update functionality
 class UpdatesCog(commands.Cog):

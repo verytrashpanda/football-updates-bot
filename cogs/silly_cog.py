@@ -1,9 +1,6 @@
 import discord as dc
 from discord.ext import commands
 from discord import app_commands
-import requests
-import datetime
-import random
 
 #Cog for silly commands
 class SillyCog(commands.Cog):

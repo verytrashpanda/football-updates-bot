@@ -1,8 +1,9 @@
-import utils.bot_constants as consts
 import requests
 from colorama import init, Fore, Style
-
 init(autoreset=True)
+
+import utils.bot_constants as consts
+
 
 
 

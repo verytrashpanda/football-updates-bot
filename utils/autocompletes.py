@@ -1,6 +1,7 @@
-import utils.dicts as dicts
 import discord as dc
 from discord import app_commands
+
+import utils.dicts as dicts
 
 #Autocomplete function for league names
 async def LeagueNameAutocomplete(interaction: dc.Interaction, current: str) -> list[app_commands.Choice["str"]]:

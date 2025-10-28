@@ -3,14 +3,11 @@ import discord.interactions as interacts
 from discord.ext import commands, tasks
 from discord import app_commands
 from datetime import datetime, timezone, time
-import random
-import asyncio
-import requests
-import json
-import os
+
 from cogs.silly_cog import SillyCog
 from cogs.fbdata_cog import FBDataCog
 from cogs.updates_cog import UpdatesCog
+
 import utils.bot_constants as consts 
 import utils.dicts as dicts
 

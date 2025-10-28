@@ -1,17 +1,15 @@
 import discord as dc
 from discord.ext import commands
 from discord import app_commands
-import requests
 from datetime import datetime
-import random
 import json
 import os
+from utils.pull_request import PullRequest
+from io import BytesIO
+
 import utils.bot_constants as consts
 import utils.dicts as dicts
 import utils.table_drawing as drawing
-from utils.pull_request import PullRequest
-from io import BytesIO
-from PIL import Image, ImageDraw, ImageFont, ImageText, ImageFilter
 from utils.autocompletes import LeagueNameAutocomplete
 
 #This cog will deal with all commands that pull from the football-data.org API for stats and updates.

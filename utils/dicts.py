@@ -1,6 +1,3 @@
-import requests
-import utils.bot_constants as consts
-
 #I define a list of leagues we care about here and their associated ID. API-football has 7816 leagues - we do not care about most of them.
 updatedLeagues = {
     "Premier League" : 39,

@@ -1,9 +1,10 @@
 from PIL import Image, ImageDraw, ImageFont, ImageText, ImageFilter
 import requests
-import utils.bot_constants as consts 
-import utils.dicts as dicts
 from io import BytesIO
 import os
+
+import utils.bot_constants as consts 
+import utils.dicts as dicts
 
 class Team:
     def __init__(self, position = 0, name = "", points = 0 , logo = ""):
