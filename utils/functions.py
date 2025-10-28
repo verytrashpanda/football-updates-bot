@@ -25,11 +25,11 @@ async def ReportWriter(fixture: Fixture, event: MatchEvent) -> dc.Embed:
             eventString = f"{event.player} of {event.team} shown a {event.detail} for {event.comment.lower()}."
     elif event.type == "Goal":
         if event.detail == "Normal Goal":
-            eventString = f"**GOAL!** {scoreCard}. {event.team} score! Scorer: {event.player}, assist: {event.assist}"
+            eventString = f"**GOAL!** {event.team} score! Scorer: {event.player}, assist: {event.assist}"
         elif event.detail == "Penalty":
-            eventString = f"GOAL! {scoreCard}. {event.team} convert the penalty! Scorer: {event.player}"
+            eventString = f"GOAL! {event.team} convert the penalty! Scorer: {event.player}"
         elif event.detail == "Missed Penalty":
-            eventString = f"{event.player} misses a penalty for {event.team}. {scoreCard}"
+            eventString = f"{event.player} misses a penalty for {event.team}."
     elif event.type == "subst":
         eventString = f"{event.team} make a sub. {event.player} off, {event.assist} on."
     else:

@@ -27,6 +27,7 @@ class UpdatesCog(commands.Cog):
     todayFixtures: list[Fixture] = [] #List of Fixture classes that resets at checkAheadTime each day
     liveFixtures: list[Fixture] = []
 
+
     updateGuildList: list[dc.channel.TextChannel] = []
 
     #Pull all the currently live Fixtures in our league
@@ -76,6 +77,9 @@ class UpdatesCog(commands.Cog):
 
     #When the cog loads this runs
     async def cog_load(self):
+        testChannel = self.bot.get_channel(1428168051844452362)
+        self.updateGuildList.append(testChannel)
+
         self.LeagueWatcher.start()
 
     #Live league watcher/update giver
@@ -108,7 +112,7 @@ class UpdatesCog(commands.Cog):
         #Here we look through the new live ones to report changes of status
         for fixture in self.liveFixtures:
             if fixture.statusCode != fixture.lastReportedStatus:
-                string = f"{fixture.homeTeamName} vs {fixture.awayTeamName} has entered status {fixture.statusCode}"
+                string = f"{fixture.homeTeamName} vs {fixture.awayTeamName} has entered status {fixture.statusLong}"
                 print(string)
                 fixture.lastReportedStatus = fixture.statusCode
 
@@ -155,6 +159,7 @@ class UpdatesCog(commands.Cog):
     async def WatchLeagueSetup(self):
         self.liveFixtures = await self.GetLiveFixtures() #Update the liveFixtures list.
         for fixture in self.liveFixtures:
+            fixture.lastReportedStatus = fixture.statusCode
             for event in fixture.eventList:
                 #For each event in each fixture, set all events that happened before startup so reported = True
                 event.reported = True
