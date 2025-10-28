@@ -16,7 +16,7 @@ def GetReportString(event: MatchEvent) -> str:
         if event.comment == None:
             eventString = f"{event.player} of {event.team} shown a {event.detail}."
         else:
-            eventString = f"{event.player} of {event.team} shown a {event.detail} for {event.comments.lower()}."
+            eventString = f"{event.player} of {event.team} shown a {event.detail} for {event.comment.lower()}."
     elif event.type == "Goal":
         if event.detail == "Normal Goal":
             eventString = f"GOAL! {event.team} score! Scorer: {event.player}, assist: {event.assist}"

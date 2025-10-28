@@ -23,7 +23,7 @@ class MatchEvent:
 
         self.player: str = jsonDict["player"]["name"]
 
-        self.assist: str = jsonDict["player"]["name"]
+        self.assist: str = jsonDict["assist"]["name"]
 
         self.type: str = jsonDict["type"]
         self.detail: str = jsonDict["detail"]
@@ -33,7 +33,6 @@ class MatchEvent:
 class Fixture:
     def __init__(self, jsonDict):
         self.eventList: list[MatchEvent] = []
-        self.jsonDict: dict = jsonDict #Store the entire dictionary in the class just in case.
         self.UpdateMe(jsonDict) #Initialise all the variables that can change
 
         #Initalise the variables which will never change in this class:
@@ -45,6 +44,9 @@ class Fixture:
         self.awayTeamName: str = jsonDict["teams"]["away"]["name"]
 
     def UpdateMe(self, jsonDict) -> None: #This function updates the attributes that should change
+        #The passed in jsonDict is stored as a variable.
+        self.jsonDict: dict = jsonDict
+
         #Date - can change if a match is rescheduled, but mostly shouldn't on the day.
         isoTime: str = jsonDict["fixture"]["date"] 
         self.date: datetime = datetime.fromisoformat(isoTime) 
