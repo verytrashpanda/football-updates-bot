@@ -7,7 +7,7 @@ init(autoreset=True)
 
 from utils.classes import Fixture, MatchEvent
 from utils.pull_request import PullRequest
-from utils.functions import ReportWriter
+from utils.functions import EventReportWriter
 
 #Premier League update functionality
 class UpdatesCog(commands.Cog):
@@ -47,7 +47,7 @@ class UpdatesCog(commands.Cog):
             try:
                 await textChannel.send(embed=embed, content=text)
             except:
-                pass
+                print(Fore.RED + "COULD NOT PRINT")
 
     #This command updates self.liveFixtures with all the new fixtures, and updates already running ones
     async def UpdateLiveFixtures(self, newFixtureList: list[Fixture]) -> None:
@@ -97,8 +97,8 @@ class UpdatesCog(commands.Cog):
             #Get a list of all the currently unreported events in the Fixture. 
             newEventList: list[MatchEvent] = liveFixture.ReportEvents()
             for event in newEventList:
-                #Pass each event with its Fixture to the ReportWriter() function.
-                sendEmbed: dc.Embed = await ReportWriter(liveFixture, event)
+                #Pass each event with its Fixture to the EventReportWriter() function.
+                sendEmbed: dc.Embed = await EventReportWriter(liveFixture, event)
 
                 await self.SendAllChannels(embed=sendEmbed)
 
@@ -127,9 +127,10 @@ class UpdatesCog(commands.Cog):
             endedFixtureJSON = PullRequest("fixtures", params={"id":id})
             endedFixture = Fixture(endedFixtureJSON["response"][0])
 
+            #Report the final result to the channel.
             matchEndString = f"Final whistle: {endedFixture.homeTeamName} {endedFixture.homeGoals} - {endedFixture.awayGoals} {endedFixture.awayTeamName}"
             print(Fore.BLUE + matchEndString)
-            await self.SendAllChannels(text=matchEndString)
+            await self.SendAllChannels(text=matchEndString) 
             
             #And now we need to remove this fixture from the liveFixture list.
             for fixture in self.liveFixtures:
