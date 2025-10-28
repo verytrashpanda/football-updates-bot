@@ -32,8 +32,8 @@ class UpdatesCog(commands.Cog):
     #Pull all the currently live Fixtures in our league
     async def GetLiveFixtures(self) -> list[Fixture]:
 
-        #digest = PullRequest("fixtures", params={"live":"all"})
-        digest = PullRequest("fixtures", params={"live":"all", "league":self.leagueID, "season":self.currentSeason})
+        digest = PullRequest("fixtures", params={"live":"all"})
+        #digest = PullRequest("fixtures", params={"live":"all", "league":self.leagueID, "season":self.currentSeason})
 
         fixtureList = []
         for fixtureJSON in digest["response"]:
@@ -41,6 +41,13 @@ class UpdatesCog(commands.Cog):
 
         return fixtureList
     
+    async def SendAllChannels(self, channelList: list[dc.TextChannel], embed: dc.Embed, text: str) -> None:
+        for textChannel in channelList:
+            try:
+                await textChannel.send(embed=embed)
+            except:
+                pass
+
     #This command updates self.liveFixtures with all the new fixtures, and updates already running ones
     async def UpdateLiveFixtures(self, newFixtureList: list[Fixture]) -> None:
         for newFixture in newFixtureList:
@@ -53,10 +60,18 @@ class UpdatesCog(commands.Cog):
                     oldFixture.UpdateMe(newJsonDict) #Pass the new jsonDict to the old one. Update it.
                     isFixtureNew = False #Not a new Fixture.
 
-            #If it turns out this is an entirely new fixture, then simply add it to the list
+            #If it turns out this is an entirely new fixture, then simply add it to the list and announce it kicking off
             if isFixtureNew == True:
                 print(Fore.BLUE + f"Fixture {newFixture.homeTeamName} vs {newFixture.awayTeamName} added to live fixtures list!")
                 self.liveFixtures.append(newFixture)
+
+                for textChannel in self.channelList:
+                    await textChannel.send(f"{newFixture.homeTeamName} vs {newFixture.awayTeamName} kicks off!")
+                
+                newFixture.lastReportedStatus = newFixture.statusCode
+
+
+                
 
 
     #When the cog loads this runs
@@ -74,6 +89,7 @@ class UpdatesCog(commands.Cog):
 
         await self.UpdateLiveFixtures(newLiveFixtures)        
 
+        #EVENT REPORTING:
         #Now we report any new events that have taken place in the matches we're watching.
         for liveFixture in self.liveFixtures:
             #Get a list of all the currently unreported events in the Fixture. 
@@ -88,6 +104,23 @@ class UpdatesCog(commands.Cog):
                     except:
                         pass
 
+        #STATUS CHANGE REPORTING:
+        #Here we look through the new live ones to report changes of status
+        for fixture in self.liveFixtures:
+            if fixture.statusCode != fixture.lastReportedStatus:
+                string = f"{fixture.homeTeamName} vs {fixture.awayTeamName} has entered status {fixture.statusCode}"
+                print(string)
+                fixture.lastReportedStatus = fixture.statusCode
+
+                for textChannel in self.updateGuildList:
+                    try:
+                        await textChannel.send(string)
+                    except:
+                        pass
+                
+
+
+        #MATCH END REPORTING:
         currentLiveFixtureIDs: list[int] = []
         newLiveFixtureIDs: list[int] = []
         #The last thing we do is check for finished matches. First we get a list of current and new liveFixture IDs:
